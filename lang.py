@@ -3,10 +3,11 @@
 import random
 
 class NamingException(Exception):
+    """Basic exception class for naming"""
     pass
 
 class ComposerElementBase:
-    """Base class of composer"""
+    """Base class of element composer"""
     characters = None
     element = None
     result = None
@@ -41,8 +42,8 @@ class ComposerElement_ko(ComposerElementBase):
             else:
                 ingredient[idx] = random.randrange(len(jamo[idx]))
 
-        result_hex = hex(0xac00 + ((ingredient[0] * 21) + ingredient[1]) * 28 + ingredient[2])
-        result_char = chr(result_hex)
+        result_int = 0xac00 + ((ingredient[0] * 21) + ingredient[1]) * 28 + ingredient[2]
+        result_char = chr(result_int)
 
         self.result = result_char
         return result_char
