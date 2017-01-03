@@ -41,7 +41,8 @@ class ComposerElement_ko(ComposerElementBase):
             else:
                 ingredient[idx] = random.randrange(len(jamo[idx]))
 
-        result = 0xac00 + ((ingredient[0] * 21) + ingredient[1]) * 28 + ingredient[2]
+        result_hex = hex(0xac00 + ((ingredient[0] * 21) + ingredient[1]) * 28 + ingredient[2])
+        result_char = chr(result_hex)
 
-        self.result = result
-        return result
+        self.result = result_char
+        return result_char
