@@ -22,7 +22,7 @@ class ComposerElement_ko(ComposerElementBase):
     'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'), \
     ('ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ', \
     'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ', 'ㅟ', 'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ'), \
-    ('ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄹ', 'ㄺ', 'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', \
+    ('', 'ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄹ', 'ㄺ', 'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', \
     'ㄿ', 'ㅀ', 'ㅁ', 'ㅂ', 'ㅄ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ') \
     )
     def __init__(self, initial=None, medial=None, final=None):
@@ -34,9 +34,9 @@ class ComposerElement_ko(ComposerElementBase):
         ingredient = [None, None, None]
 
         for idx in range(3):
-            if elem[idx]:
+            if elem[idx] is not None:
                 if isinstance(elem[idx], str):
-                    ingredient[idx] = jamo[idx].index(elem)
+                    ingredient[idx] = jamo[idx].index(elem[idx])
                 elif isinstance(elem[idx], int):
                     ingredient[idx] = elem[idx]
             else:
