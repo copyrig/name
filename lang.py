@@ -1,14 +1,15 @@
 """Language set"""
 
-import random
+#import abc
 import collections
+import random
 
 class NamingLibException(Exception):
     """Basic exception class for naming"""
     pass
 
-class AutoMemberTupleSetType(type):
-    """This metaclass automatically set the arguments and change it into tuple"""
+class AutoMemberListSetType(type):
+    """This metaclass automatically set the arguments and change it into list"""
     def __call__(cls, *args, **kwargs):
         # Initialize
         elem = type.__call__(cls, *args, **kwargs)
@@ -23,25 +24,34 @@ class AutoMemberTupleSetType(type):
         # Write the user-defined arguments
         for (name, value) in kwargs.items():
             if isinstance(value, tuple) or isinstance(value, list):
-                buf_dict[name] = tuple(value)
+                buf_dict[name] = list(value)
             elif isinstance(value, str) or isinstance(value, int):
-                buf_dict[name] = (value,)
+                buf_dict[name] = [value]
             elif value is None:
-                buf_dict[name] = (None,)
+                buf_dict[name] = None
             else:
                 raise NamingLibException('Wrong character')
-        setattr(elem, 'argument', tuple(buf_dict.values()))
+        setattr(elem, 'argument', list(buf_dict.values()))
         return elem
 
-class ComposerElementBase(metaclass=AutoMemberTupleSetType):
+class ComposerElementBase(metaclass=AutoMemberListSetType):
     """Base class of element composer"""
     # Please revise with metaclass
     characters = None
     argument = tuple()
     result = None
+    #@abstractmethod
     def compose(self):
         """Compose the name"""
         pass
+    def __digitize(self, seq_control, seq_compare):
+        for elem in seq_control:
+            if elem in seq_compare:
+                elem = seq_compare.index(elem)
+    def __restore(self, seq_control, seq_compare):
+        for elem in seq_control:
+            if elem in range(len(seq_compare)):
+                elem = seq_compare[elem]
 
 class ComposerElement_ko(ComposerElementBase):
     """Korean name composer - inspired by 이강성, 『파이썬 3 바이블』"""
@@ -58,22 +68,15 @@ class ComposerElement_ko(ComposerElementBase):
         pass # See the metaclass
     def compose(self):
         """Compose the Korean name"""
-        jamo = self.characters
-        argument = self.argument
+        characters = self.characters
+        argument = list(self.argument)
         ingredient = [None, None, None]
 
         # Change str to index
-        for elem_base in argument:
-            for (idx_target, elem_target) in enumerate(elem_base):
-                pass
-
-        for idx in range(3):
-            pass # Under dev
+        pass # Under dev
 
         result_int = 0xac00 + ((ingredient[0] * 21) + ingredient[1]) * 28 + ingredient[2]
         result_char = chr(result_int)
 
         self.result = result_char
         return result_char
-
-x = ComposerElement_ko(initial='ㄱ', final=11)
