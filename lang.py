@@ -40,7 +40,7 @@ class ComposerElementBase(metaclass=AutoMemberListSetType):
     characters = None
     argument = tuple()
     result = None
-    #@abstractmethod
+    #@abc.abstractmethod
     def compose(self):
         """Compose the name"""
         pass
@@ -73,7 +73,13 @@ class ComposerElement_ko(ComposerElementBase):
         ingredient = [None, None, None]
 
         # Change str to index
-        pass # Under dev
+        for (elem, compare) in zip(argument, (characters[0], characters[0], \
+                                                characters[1], characters[1], \
+                                                characters[2], characters[2])):
+            self.__digitize(elem, compare)
+
+        # Check
+        # under dev
 
         result_int = 0xac00 + ((ingredient[0] * 21) + ingredient[1]) * 28 + ingredient[2]
         result_char = chr(result_int)
