@@ -1,6 +1,6 @@
 """Language set"""
 
-#import abc
+import abc
 import collections
 import random
 
@@ -8,7 +8,22 @@ class NamingLibException(Exception):
     """Basic exception class for naming"""
     pass
 
-class AutoMemberListSetType(type):
+class AutoMemberSetType(type):
+    """This metaclass automatically set the arguments and change it into list"""
+    def __call__(cls, *args, **kwargs):
+        # Initialize
+        elem = type.__call__(cls, *args, **kwargs)
+        name_arg = elem.__init__.__func__.__code__.co_varnames[1:]
+        defaults = elem.__init__.__func__.__defaults__
+
+        # Write the default arguments
+        for (name, value) in zip(name_arg, args + defaults):
+            setattr(elem, name, value)
+        # Write the user-defined arguments
+            setattr(elem, name, value)
+        return elem
+
+class AutoMemberListSetType(AutoMemberSetType):
     """This metaclass automatically set the arguments and change it into list"""
     def __call__(cls, *args, **kwargs):
         # Initialize
@@ -18,23 +33,48 @@ class AutoMemberListSetType(type):
 
         # Write the default arguments
         buf_dict = collections.OrderedDict()
+        if defaults is None:
+            defaults = tuple()
 
         for (name, value) in zip(name_arg, args + defaults):
-            buf_dict[name] = value
+            buf_dict[name] = cls.__list(value)
         # Write the user-defined arguments
         for (name, value) in kwargs.items():
-            if isinstance(value, tuple) or isinstance(value, list):
-                buf_dict[name] = list(value)
-            elif isinstance(value, str) or isinstance(value, int):
-                buf_dict[name] = [value]
-            elif value is None:
-                buf_dict[name] = None
-            else:
-                raise NamingLibException('Wrong character')
-        setattr(elem, 'argument', list(buf_dict.values()))
+            buf_dict[name] = cls.__list(value)
+        setattr(elem, 'element', list(buf_dict.values()))
         return elem
+    # This fu
+    def __list(cls, elem):
+        if isinstance(elem, tuple) or isinstance(elem, list):
+            return list(elem)
+        elif isinstance(elem, str) or isinstance(elem, int):
+            return [elem]
+        elif elem is None:
+            return None
+        else:
+            raise NamingLibException('Wrong character')
 
-class ComposerElementBase(metaclass=AutoMemberListSetType):
+class SimplifiedElementBase(metaclass=AutoMemberSetType):
+    """Base element class"""
+    element = None
+    def __init__(self, element=None):
+        pass
+    def __repr__(self):
+        return self.element
+
+class ListBase(SimplifiedElementBase, metaclass=AutoMemberListSetType):
+    """Base class of customed list class"""
+    pass
+
+class IncludeList(ListBase):
+    """Use this class to include"""
+    pass
+
+class ExcludeList(ListBase):
+    """Use this class to exclude"""
+    pass
+
+class ComposerElementBase(metaclass=AutoMemberSetType):
     """Base class of element composer"""
     # Please revise with metaclass
     characters = None
@@ -44,14 +84,14 @@ class ComposerElementBase(metaclass=AutoMemberListSetType):
     def compose(self):
         """Compose the name"""
         pass
-    def __digitize(self, seq_control, seq_compare):
-        for elem in seq_control:
-            if elem in seq_compare:
-                elem = seq_compare.index(elem)
-    def __restore(self, seq_control, seq_compare):
-        for elem in seq_control:
-            if elem in range(len(seq_compare)):
-                elem = seq_compare[elem]
+    def __digitize(self, list_control, list_compare):
+        for elem in list_control:
+            if elem in list_compare:
+                elem = list_compare.index(elem)
+    def __characterize(self, list_control, list_compare):
+        for elem in list_control:
+            if elem in range(len(list_compare)):
+                elem = list_compare[elem]
 
 class ComposerElement_ko(ComposerElementBase):
     """Korean name composer - inspired by 이강성, 『파이썬 3 바이블』"""
@@ -63,8 +103,7 @@ class ComposerElement_ko(ComposerElementBase):
     ('', 'ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄹ', 'ㄺ', 'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', \
     'ㄿ', 'ㅀ', 'ㅁ', 'ㅂ', 'ㅄ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ') \
     )
-    def __init__(self, initial=None, initial_exclude=None, medial=None, \
-                        medial_exclude=None, final=None, final_exclude=None):
+    def __init__(self, initial=None, medial=None, final=None):
         pass # See the metaclass
     def compose(self):
         """Compose the Korean name"""
