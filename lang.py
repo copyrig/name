@@ -1,6 +1,5 @@
 """Language set"""
 
-import abc
 import collections
 import random
 
@@ -16,10 +15,11 @@ class AutoMemberSetType(type):
         name_arg = elem.__init__.__func__.__code__.co_varnames[1:]
         defaults = elem.__init__.__func__.__defaults__
 
-        # Write the default arguments
-        for (name, value) in zip(name_arg, args + defaults):
+        # Write the default arguments and user-defined arguments with *args
+        for (name, value) in zip(name_arg, args + defaults[len(args):]):
             setattr(elem, name, value)
-        # Write the user-defined arguments
+        # Write the user-defined arguments with **kwargs
+        for (name, value) in kwargs.items():
             setattr(elem, name, value)
         return elem
 
@@ -31,19 +31,19 @@ class AutoMemberListSetType(AutoMemberSetType):
         name_arg = elem.__init__.__func__.__code__.co_varnames[1:]
         defaults = elem.__init__.__func__.__defaults__
 
-        # Write the default arguments
+        # Write the default arguments and user-defined arguments with *args
         buf_dict = collections.OrderedDict()
         if defaults is None:
             defaults = tuple()
-
-        for (name, value) in zip(name_arg, args + defaults):
+        for (name, value) in zip(name_arg, args + defaults[len(args):]):
             buf_dict[name] = cls.__list(value)
-        # Write the user-defined arguments
+        # Write the user-defined arguments with **kwargs
         for (name, value) in kwargs.items():
             buf_dict[name] = cls.__list(value)
         setattr(elem, 'element', list(buf_dict.values()))
         return elem
-    # This fu
+    # This method could be a function, but
+    # @staticmethod is not used because of metaclass
     def __list(cls, elem):
         if isinstance(elem, tuple) or isinstance(elem, list):
             return list(elem)
@@ -52,7 +52,7 @@ class AutoMemberListSetType(AutoMemberSetType):
         elif elem is None:
             return None
         else:
-            raise NamingLibException('Wrong character')
+            raise NamingLibException('Wrong type for __list')
 
 class SimplifiedElementBase(metaclass=AutoMemberSetType):
     """Base element class"""
