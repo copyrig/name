@@ -42,8 +42,7 @@ class AutoMemberListSetType(AutoMemberSetType):
             buf_dict[name] = cls.__list(value)
         setattr(elem, 'element', list(buf_dict.values()))
         return elem
-    # This method could be a function, but
-    # @staticmethod is not used because of metaclass
+    #@staticmethod
     def __list(cls, elem):
         if isinstance(elem, tuple) or isinstance(elem, list):
             return list(elem)
@@ -60,7 +59,7 @@ class SimplifiedElementBase(metaclass=AutoMemberSetType):
     def __init__(self, element=None):
         pass
     def __repr__(self):
-        return self.element
+        return str(self.element)
 
 class ListBase(SimplifiedElementBase, metaclass=AutoMemberListSetType):
     """Base class of customed list class"""
@@ -112,16 +111,14 @@ class ComposerElement_ko(ComposerElementBase):
         ingredient = [None, None, None]
 
         # Change str to index
-        for (elem, compare) in zip(argument, (characters[0], characters[0], \
-                                                characters[1], characters[1], \
-                                                characters[2], characters[2])):
+        for (elem, compare) in zip(argument, (characters[0], characters[1], characters[2])):
             self.__digitize(elem, compare)
 
         # Check
         # under dev
 
-        result_int = 0xac00 + ((ingredient[0] * 21) + ingredient[1]) * 28 + ingredient[2]
-        result_char = chr(result_int)
+        #result_int = 0xac00 + ((ingredient[0] * 21) + ingredient[1]) * 28 + ingredient[2]
+        #result_char = chr(result_int)
 
-        self.result = result_char
-        return result_char
+        #self.result = result_char
+        #return result_char
