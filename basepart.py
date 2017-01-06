@@ -1,4 +1,4 @@
-"""Language set"""
+"""Base part of language set"""
 
 import collections
 
