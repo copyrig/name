@@ -59,7 +59,7 @@ class SimplifiedElementBase(metaclass=AutoMemberSetType):
     def __init__(self, element=None):
         pass
     def __repr__(self):
-        return str(self.element)
+        return '<{}: {}>'.format('SElement', self.element)
 
 class ListBase(SimplifiedElementBase, metaclass=AutoMemberListSetType):
     """Base class of customed list class"""
@@ -83,14 +83,18 @@ class ComposerElementBase(metaclass=AutoMemberSetType):
     def compose(self):
         """Compose the name"""
         pass
-    def __digitize(self, list_control, list_compare):
-        for elem in list_control:
-            if elem in list_compare:
-                elem = list_compare.index(elem)
-    def __characterize(self, list_control, list_compare):
-        for elem in list_control:
-            if elem in range(len(list_compare)):
-                elem = list_compare[elem]
+    def digitize(self, list_control, list_compare):
+        """Digitize the list"""
+        # pylint: disable=unused-variable
+        for (idx, elem) in enumerate(list_control):
+            if list_control[idx] in list_compare:
+                list_control[idx] = list_compare.index(list_control[idx])
+    def characterize(self, list_control, list_compare):
+        # pylint: disable=unused-variable
+        """Characterize the list"""
+        for (idx, elem) in enumerate(list_control):
+            if list_control[idx] in range(len(list_compare)):
+                list_control[idx] = list_compare.index(list_control[idx])
 
 class ComposerElement_ko(ComposerElementBase):
     """Korean name composer - inspired by 이강성, 『파이썬 3 바이블』"""
@@ -110,14 +114,14 @@ class ComposerElement_ko(ComposerElementBase):
     def compose(self):
         """Compose the Korean name"""
         characters = self.characters
-        ingredient = [None, None, None]
         list_original = [self.initial, self.medial, self.final]
         list_process = list(list_original)
+        ingredient = [None, None, None]
 
         # Check type and switch
         for (idx, elem) in enumerate(list_process):
             if isinstance(elem, ListBase):
-                list_process[idx] = (list_process[idx].element)[1]
+                list_process[idx] = (list_process[idx].element)[0]
             elif elem is None:
                 list_process[idx] = list()
             else:
@@ -125,10 +129,11 @@ class ComposerElement_ko(ComposerElementBase):
 
         # Change str to index
         for (elem, compare) in zip(list_process, (characters[0], characters[1], characters[2])):
-            self.__digitize(elem, compare)
+            self.digitize(elem, compare)
 
-        # Check
-        # On dev
+        # Check whether index is out of range
+        for elem in list_process:
+            pass
 
         result_int = 0xac00 + ((ingredient[0] * 21) + ingredient[1]) * 28 + ingredient[2]
         result_char = chr(result_int)
