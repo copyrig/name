@@ -49,7 +49,7 @@ class AutoMemberListSetType(AutoMemberSetType):
         elif isinstance(elem, str) or isinstance(elem, int):
             return [elem]
         elif elem is None:
-            return None
+            return [[]]
         else:
             raise NamingLibException('Wrong type for __list')
 
@@ -63,7 +63,7 @@ class SimplifiedElementBase(metaclass=AutoMemberSetType):
 
 class ListBase(SimplifiedElementBase, metaclass=AutoMemberListSetType):
     """Base class of customed list class"""
-    pass
+    element = list()
 
 class IncludeList(ListBase):
     """Use this class to include"""
@@ -102,23 +102,39 @@ class ComposerElement_ko(ComposerElementBase):
     ('', 'ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄹ', 'ㄺ', 'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', \
     'ㄿ', 'ㅀ', 'ㅁ', 'ㅂ', 'ㅄ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ') \
     )
+    initial = ListBase()
+    medial = ListBase()
+    final = ListBase()
     def __init__(self, initial=None, medial=None, final=None):
         pass # See the metaclass
     def compose(self):
         """Compose the Korean name"""
         characters = self.characters
-        argument = list(self.argument)
         ingredient = [None, None, None]
+        list_original = [self.initial, self.medial, self.final]
+        list_process = list(list_original)
+
+        # Check type and switch
+        for (idx, elem) in enumerate(list_process):
+            if isinstance(elem, ListBase):
+                list_process[idx] = (list_process[idx].element)[1]
+            elif elem is None:
+                list_process[idx] = list()
+            else:
+                raise NamingLibException("Check composer's input type")
 
         # Change str to index
-        for (elem, compare) in zip(argument, (characters[0], characters[1], characters[2])):
+        for (elem, compare) in zip(list_process, (characters[0], characters[1], characters[2])):
             self.__digitize(elem, compare)
 
         # Check
-        # under dev
+        # On dev
 
-        #result_int = 0xac00 + ((ingredient[0] * 21) + ingredient[1]) * 28 + ingredient[2]
-        #result_char = chr(result_int)
+        result_int = 0xac00 + ((ingredient[0] * 21) + ingredient[1]) * 28 + ingredient[2]
+        result_char = chr(result_int)
 
-        #self.result = result_char
-        #return result_char
+        self.result = result_char
+        return result_char
+
+x = ComposerElement_ko(IncludeList('ㄱ'), IncludeList('ㅏ'))
+print(x.compose())
