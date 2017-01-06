@@ -75,7 +75,7 @@ class ExcludeList(ListBase):
 class ComposerElementBase(metaclass=AutoMemberSetType):
     """Base class of element composer"""
     # Please revise with metaclass
-    characters = None
+    character = None
     argument = tuple()
     result = None
     #@abc.abstractmethod
@@ -94,3 +94,9 @@ class ComposerElementBase(metaclass=AutoMemberSetType):
         for (idx, elem) in enumerate(list_control):
             if list_control[idx] in range(len(list_compare)):
                 list_control[idx] = list_compare.index(list_control[idx])
+    def check_element_index(self, lst, characterset):
+        """Check whether number in list is out of range"""
+        for elem in lst:
+            if not elem in range(len(characterset)):
+                raise NamingLibException('Character index - out of range')
+        return True
