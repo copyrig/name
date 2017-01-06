@@ -43,7 +43,7 @@ class ComposerElementKorean(basepart.ComposerElementBase):
 
         # Fill the ingredient
         for (idx, elem) in enumerate(list_process):
-            ingredient[idx] = elem.choice()
+            ingredient[idx] = elem.choice(character[idx])
 
         result_int = 0xac00 + ((ingredient[0] * 21) + ingredient[1]) * 28 + ingredient[2]
         result_char = chr(result_int)
