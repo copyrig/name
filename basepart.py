@@ -98,9 +98,12 @@ class ExcludeList(ListBase):
     """Use this class to exclude"""
     def choice(self, list_input):
         """Choose one and exclude elements from list_compare"""
+        if self.element[0] == list(range(len(list_input))):
+            raise NamingLibException('All letters are excluded')
+
         while True:
             elem = random.randrange(len(list_input))
-            if elem in self.element:
+            if elem in self.element[0]:
                 continue
             else:
                 break
