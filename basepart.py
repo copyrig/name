@@ -99,7 +99,7 @@ class ExcludeList(ListBase):
     def choice(self, list_input):
         """Choose one and exclude elements from list_compare"""
         while True:
-            elem = random.choice(list_input)
+            elem = random.randrange(len(list_input))
             if elem in self.element:
                 continue
             else:
