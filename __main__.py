@@ -5,7 +5,7 @@ import argparse
 import basepart
 import ko
 
-if __name__ == '__main__':
+def main():
     ARG_PARSER = argparse.ArgumentParser()
     ARG_PARSER.add_argument('language', type=str)
     ARG_PARSER.add_argument('length', type=int)
@@ -27,3 +27,6 @@ if __name__ == '__main__':
             raise basepart.NamingLibException('{} is unsupported language'.format(ARG.language))
 
         print(''.join(RESULT))
+
+if __name__ == '__main__':
+    main()
