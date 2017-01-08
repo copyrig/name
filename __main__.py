@@ -17,10 +17,10 @@ if __name__ == '__main__':
 
         if ARG.language == 'ko':
             for idx in range(ARG.length):
-                RESULT.append( \
-                                ko.ComposerElementKorean(basepart.ExcludeList( \
-                                            ko.ComposerElementKorean.tenuis_consonant), \
-                    final=basepart.ExcludeList(ko.ComposerElementKorean.multiple_final) \
+                RESULT.append(ko.ComposerElementKorean( \
+                    initial=basepart.IncludeList(ko.ComposerElementKorean.recommend_initial), \
+                    medial=basepart.IncludeList(ko.ComposerElementKorean.recommend_medial), \
+                    final=basepart.IncludeList(ko.ComposerElementKorean.recommend_final) \
                     ).compose() \
                 )
         else:

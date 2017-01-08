@@ -11,8 +11,9 @@ class ComposerElementKorean(basepart.ComposerElementBase):
         tuple('ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ'), \
         tuple(' ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ') \
     )
-    tenuis_consonant = tuple('ㄲㄸㅃㅆㅉ')
-    multiple_final = tuple('ㄲㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅄㅆ')
+    recommend_initial = list('ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅎ')
+    recommend_medial = list('ㅏㅓㅗㅜㅣ')
+    recommend_final = list(' ㄴㅇ')
     initial = basepart.ListBase()
     medial = basepart.ListBase()
     final = basepart.ListBase()
