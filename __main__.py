@@ -24,6 +24,6 @@ if __name__ == '__main__':
                     ).compose() \
                 )
         else:
-            basepart.NamingLibException('{} is unsupported language'.format(ARG.language))
+            raise basepart.NamingLibException('{} is unsupported language'.format(ARG.language))
 
         print(''.join(RESULT))
