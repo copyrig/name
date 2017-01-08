@@ -12,7 +12,7 @@ class ComposerElementKorean(basepart.ComposerElementBase):
         tuple(' ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ') \
     )
     tenuis_consonant = tuple('ㄲㄸㅃㅆㅉ')
-    multiple_final = tuple('ㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅄ')
+    multiple_final = tuple('ㄲㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅄㅆ')
     initial = basepart.ListBase()
     medial = basepart.ListBase()
     final = basepart.ListBase()
