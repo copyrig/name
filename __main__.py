@@ -1,7 +1,6 @@
 """Main"""
 
 import argparse
-import os
 
 import basepart
 import ko
@@ -82,7 +81,7 @@ def main():
             len(ko.ComposerElementKorean.recommend_initial) * \
             len(ko.ComposerElementKorean.recommend_medial) * \
             len(ko.ComposerElementKorean.recommend_final) - 1 \
-            ):
+            ) ** 2:
                 raise basepart.NamingLibException('generated all of the eligible names')
         else:
             list_name_added.append(result + '\n')
