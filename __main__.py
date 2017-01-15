@@ -11,6 +11,7 @@ def main():
     arg_parser = argparse.ArgumentParser()
     arg_parser.add_argument( \
         'language', \
+        choices=('ko', ), \
         help='set the valid language' \
         )
     arg_parser.add_argument( \
@@ -48,8 +49,6 @@ def main():
         if arg.length is None:
             arg.length = 2
         num_total_characters = ko.ComposerElementKorean.num_character_recommend ** 2
-    else:
-        raise basepart.NamingLibException('Unsupported language', arg.language)
 
     # General modification
     if arg.length <= 0:
