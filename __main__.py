@@ -47,6 +47,7 @@ def main():
     if arg.language == 'ko':
         if arg.length is None:
             arg.length = 2
+        num_total_characters = ko.ComposerElementKorean.num_character_recommend ** 2
     else:
         raise basepart.NamingLibException('Unsupported language', arg.language)
 
@@ -57,7 +58,8 @@ def main():
         raise basepart.NamingLibException('Wrong repeat number', arg.repeat)
 
     # Open file
-    file_stream = open(arg.storage, 'r+')
+    file_stream = open(arg.storage, 'a+')
+    file_stream.seek(0)
     list_name_original = file_stream.readlines()
     list_name_added = list()
 
@@ -69,19 +71,16 @@ def main():
         if arg.language == 'ko':
             for _ in range(arg.length):
                 result.append(ko.ComposerElementKorean( \
-                    initial=basepart.IncludeList(ko.ComposerElementKorean.recommend_initial), \
-                    medial=basepart.IncludeList(ko.ComposerElementKorean.recommend_medial), \
-                    final=basepart.IncludeList(ko.ComposerElementKorean.recommend_final) \
+                    initial=basepart.IncludeList(ko.ComposerElementKorean.character_recommend[0]), \
+                    medial=basepart.IncludeList(ko.ComposerElementKorean.character_recommend[1]), \
+                    final=basepart.IncludeList(ko.ComposerElementKorean.character_recommend[2]) \
                     ).compose() \
                 )
         result = ''.join(result)
 
         if arg.fresh and (result + '\n') in list_name_original + list_name_added:
-            if len(list_name_original + list_name_added) >= ( \
-            len(ko.ComposerElementKorean.recommend_initial) * \
-            len(ko.ComposerElementKorean.recommend_medial) * \
-            len(ko.ComposerElementKorean.recommend_final) - 1 \
-            ) ** 2:
+            if len(list_name_original + list_name_added) >= \
+                num_total_characters:
                 raise basepart.NamingLibException('generated all of the eligible names')
         else:
             list_name_added.append(result + '\n')
