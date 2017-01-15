@@ -60,11 +60,14 @@ def main():
     # Generate and store
     file_stream = open(arg.storage, 'a+')
 
-    idx_gen = 0
-    while idx_gen < arg.repeat:
+    idx_generated = 0
+    idx_looped = 0
+    while idx_generated < arg.repeat:
         result = list()
         file_stream.seek(os.SEEK_SET)
         filed_name = file_stream.readlines()
+
+        idx_looped += 1
 
         if arg.language == 'ko':
             for _ in range(arg.length):
@@ -77,12 +80,17 @@ def main():
         result = ''.join(result)
 
         if arg.fresh and (result + '\n') in filed_name:
-            continue
+            if idx_looped >= ( \
+            (len(ko.ComposerElementKorean.recommend_initial) - 1) * \
+            (len(ko.ComposerElementKorean.recommend_medial) - 1) * \
+            (len(ko.ComposerElementKorean.recommend_final) - 1) \
+            ):
+                raise basepart.NamingLibException('generated all of the eligible names', idx_looped)
         else:
             file_stream.write(result + '\n')
             if arg.print:
                 print(result)
-            idx_gen += 1
+            idx_generated += 1
 
     file_stream.close()
 
