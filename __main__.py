@@ -57,17 +57,15 @@ def main():
     if arg.repeat <= 0:
         raise basepart.NamingLibException('Wrong repeat number', arg.repeat)
 
-    # Generate and store
-    file_stream = open(arg.storage, 'a+')
+    # Open file
+    file_stream = open(arg.storage, 'r+')
+    list_name_original = file_stream.readlines()
+    list_name_added = list()
 
+    # Generate and store
     idx_generated = 0
-    idx_looped = 0
     while idx_generated < arg.repeat:
         result = list()
-        file_stream.seek(os.SEEK_SET)
-        filed_name = file_stream.readlines()
-
-        idx_looped += 1
 
         if arg.language == 'ko':
             for _ in range(arg.length):
@@ -79,19 +77,21 @@ def main():
                 )
         result = ''.join(result)
 
-        if arg.fresh and (result + '\n') in filed_name:
-            if idx_looped >= ( \
-            (len(ko.ComposerElementKorean.recommend_initial) - 1) * \
-            (len(ko.ComposerElementKorean.recommend_medial) - 1) * \
-            (len(ko.ComposerElementKorean.recommend_final) - 1) \
+        if arg.fresh and (result + '\n') in list_name_original + list_name_added:
+            if len(list_name_original + list_name_added) >= ( \
+            len(ko.ComposerElementKorean.recommend_initial) * \
+            len(ko.ComposerElementKorean.recommend_medial) * \
+            len(ko.ComposerElementKorean.recommend_final) - 1 \
             ):
-                raise basepart.NamingLibException('generated all of the eligible names', idx_looped)
+                raise basepart.NamingLibException('generated all of the eligible names')
         else:
-            file_stream.write(result + '\n')
+            list_name_added.append(result + '\n')
             if arg.print:
                 print(result)
             idx_generated += 1
 
+    # Write to file and close file
+    file_stream.writelines(list_name_added)
     file_stream.close()
 
 if __name__ == '__main__':
