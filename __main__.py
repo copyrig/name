@@ -1,6 +1,7 @@
 """Main"""
 
 import argparse
+import os
 
 import basepart
 import ko
@@ -14,12 +15,6 @@ def main():
         help='set the valid language' \
         )
     arg_parser.add_argument( \
-        'length', \
-        type=int, \
-        nargs='?', \
-        help='set the length of name' \
-        )
-    arg_parser.add_argument( \
         'repeat', \
         type=int, \
         nargs='?', \
@@ -27,9 +22,25 @@ def main():
         help='set the number of repetition' \
         )
     arg_parser.add_argument( \
-        '-s', '--store', \
+        'length', \
+        type=int, \
+        nargs='?', \
+        help='set the length of name' \
+        )
+    arg_parser.add_argument( \
+        '-f', '--fresh', \
+        action='store_true', \
+        help='make the application return fresh result' \
+        )
+    arg_parser.add_argument( \
+        '-p', '--print', \
+        action='store_true', \
+        help='print the result' \
+        )
+    arg_parser.add_argument( \
+        '-s', '--storage', \
         default=basepart.DEFAULT_STORAGE, \
-        help='set the storage of result' \
+        help='set the path of result file' \
         )
     arg = arg_parser.parse_args()
 
@@ -46,9 +57,14 @@ def main():
     if arg.repeat <= 0:
         raise basepart.NamingLibException('Wrong repeat number', arg.repeat)
 
-    # Generate name
-    for _ in range(arg.repeat):
+    # Generate and store
+    file_stream = open(arg.storage, 'a+')
+
+    idx_gen = 0
+    while idx_gen < arg.repeat:
         result = list()
+        file_stream.seek(os.SEEK_SET)
+        filed_name = file_stream.readlines()
 
         if arg.language == 'ko':
             for _ in range(arg.length):
@@ -58,8 +74,17 @@ def main():
                     final=basepart.IncludeList(ko.ComposerElementKorean.recommend_final) \
                     ).compose() \
                 )
+        result = ''.join(result)
 
-        print(''.join(result))
+        if arg.fresh and (result + '\n') in filed_name:
+            continue
+        else:
+            file_stream.write(result + '\n')
+            if arg.print:
+                print(result)
+            idx_gen += 1
+
+    file_stream.close()
 
 if __name__ == '__main__':
     main()
