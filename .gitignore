@@ -93,4 +93,4 @@ launch.json
 test.txt
 
 # User-defined storage
-.storage
+*.storage
