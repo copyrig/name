@@ -91,3 +91,6 @@ ENV/
 # Visual Studio Code
 launch.json
 test.txt
+
+# User-defined storage
+*.storage
