@@ -84,7 +84,7 @@ def main():
         else:
             list_name_added.append(result + '\n')
             if arg.print:
-                print(result, end='')
+                print(result)
             idx_generated += 1
 
     # Write to file and close file
