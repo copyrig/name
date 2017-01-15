@@ -3,6 +3,8 @@
 import collections
 import random
 
+DEFAULT_STORAGE = 'name.storage'
+
 class NamingLibException(Exception):
     """Basic exception class for naming"""
     pass
