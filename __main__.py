@@ -59,7 +59,7 @@ def main():
     # Open file
     file_stream = open(arg.storage, 'a+')
     file_stream.seek(0)
-    list_name_original = file_stream.readlines()
+    list_name_original = list(set(file_stream.readlines()))
     list_name_added = list()
 
     # Generate and store
@@ -78,8 +78,7 @@ def main():
         result = ''.join(result)
 
         if arg.fresh and (result + '\n') in list_name_original + list_name_added:
-            if len(list_name_original + list_name_added) >= \
-                num_total_characters:
+            if len(list_name_original + list_name_added) >= num_total_characters:
                 raise basepart.NamingLibException('generated all of the eligible names')
         else:
             list_name_added.append(result + '\n')
